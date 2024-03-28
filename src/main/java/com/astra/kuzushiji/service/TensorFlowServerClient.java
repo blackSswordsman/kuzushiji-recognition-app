@@ -1,5 +1,6 @@
 package com.astra.kuzushiji.service;
 
+import com.astra.kuzushiji.exception.TensorFlowServerException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -26,19 +27,24 @@ public class TensorFlowServerClient {
 
     private final RestTemplate restTemplate;
 
-    public File processImage(Resource image) {
+    public byte[] processImage(Resource image) {
         var headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
         var requestBody = new LinkedMultiValueMap<String, Object>();
         requestBody.add("file", image);
         var request = new HttpEntity<>(requestBody, headers);
-        var requestCallback = restTemplate.httpEntityCallback(request, File.class);
-        return restTemplate.execute(this.tensorFlowServerHost, HttpMethod.POST, requestCallback, this::extractImage);
+        var requestCallback = restTemplate.httpEntityCallback(request, byte[].class);
+        try{
+            return restTemplate.execute(this.tensorFlowServerHost, HttpMethod.POST, requestCallback, this::extractImage);
+        } catch (Exception ignore){
+            throw new TensorFlowServerException();
+        }
     }
 
-    private File extractImage(ClientHttpResponse clientHttpResponse) throws IOException {
-        var tempFile = File.createTempFile("tmp", "processedImage");
-        StreamUtils.copy(clientHttpResponse.getBody(), new FileOutputStream(tempFile));
-        return tempFile;
+    private byte[] extractImage(ClientHttpResponse clientHttpResponse) throws IOException {
+        if(clientHttpResponse.getStatusCode().isError()){
+            throw new TensorFlowServerException();
+        }
+        return clientHttpResponse.getBody().readAllBytes();
     }
 }

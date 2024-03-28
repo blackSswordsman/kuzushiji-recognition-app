@@ -7,21 +7,14 @@ spring:
   jpa:
     database: postgresql
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
   security:
     oauth2:
       client:
         registration:
-          github:
-            clientId: Iv1.63c0bf311f7a607b
-            clientSecret: 7390100449f61c60aec5090a839ecb9f99a2e091
           google:
-            clientId: 700086744673-keplb3hc6ere9uiqddg4aleho4i08g37.apps.googleusercontent.com
-            clientSecret: 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
-#      resourceserver:
-#        jwt:
-#          issuer-uri: https://accounts.google.com
-#          jwk-set-uri: https://www.googleapis.com/oauth2/v3/certs
+            clientId: 466899164217-o1dnr5imc1knsirdfahea277v85a5pvc.apps.googleusercontent.com
+            clientSecret: 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
 tensorFlowServerHost:  http://127.0.0.1:5000/file-upload

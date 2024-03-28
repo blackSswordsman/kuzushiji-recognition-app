@@ -1,50 +1,23 @@
 package com.astra.kuzushiji.configuration;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.oauth2.jose.jws.SignatureAlgorithm;
-import org.springframework.security.oauth2.jwt.JwtDecoder;
-import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity()
 public class SecurityConfiguration {
-    @Value("${spring.security.oauth2.resourceserver.jwt.jwk-set-uri}")
-    private String jwkSetUri;
-
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, JwtDecoder jwtDecoder) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .authorizeHttpRequests(authorizeRequests ->
-                        authorizeRequests.anyRequest().fullyAuthenticated()
-                )
-                .sessionManagement(sessionManagement ->
-                        sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                )
-                .oauth2ResourceServer(oauth2ResourceServer ->
-                        oauth2ResourceServer.jwt(jwt -> jwt.decoder(jwtDecoder))
-                )
-                // Настройка CORS
-                .cors(AbstractHttpConfigurer::disable) // Или настройте CORS по вашим потребностям
-                // Отключение CSRF
-                .csrf(AbstractHttpConfigurer::disable);
+                .csrf(AbstractHttpConfigurer::disable) // Отключение CSRF
+                .authorizeHttpRequests(authz -> authz
+                        .anyRequest().authenticated()) // Настройка авторизации
+                .oauth2Login(oauth2 -> {}); // Настройка OAuth2 Login
 
         return http.build();
-    }
-
-    /*@Bean*/
-    @Bean
-    public JwtDecoder jwtDecoder() {
-        return NimbusJwtDecoder
-                .withJwkSetUri(jwkSetUri)
-                .jwsAlgorithm(SignatureAlgorithm.RS256).build();
     }
 }
