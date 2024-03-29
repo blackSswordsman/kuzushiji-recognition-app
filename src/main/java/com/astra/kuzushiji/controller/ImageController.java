@@ -19,13 +19,14 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/")
 public class ImageController {
 
     private final ImageService imageService;
     private final ImageRepo imageRepo;
 
-    @PostMapping(value = "/process_image", consumes = {MediaType.IMAGE_JPEG_VALUE,MediaType.IMAGE_PNG_VALUE},produces = MediaType.IMAGE_JPEG_VALUE)
+    @PostMapping(value = "/process_image", produces = MediaType.IMAGE_JPEG_VALUE)
     public Resource processImage(@RequestParam("image") MultipartFile image) throws IOException {
         return imageService.processImage(image.getResource());
     }

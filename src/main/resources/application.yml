@@ -12,9 +12,12 @@ spring:
     show-sql: true
   security:
     oauth2:
-      client:
-        registration:
-          google:
-            clientId: 466899164217-o1dnr5imc1knsirdfahea277v85a5pvc.apps.googleusercontent.com
-            clientSecret: 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
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8080/realms/master
+          jwk-set-uri: http://localhost:8080/realms/master/protocol/openid-connect/certs
 tensorFlowServerHost:  http://127.0.0.1:5000/file-upload
+server:
+  port:
+    8082
+

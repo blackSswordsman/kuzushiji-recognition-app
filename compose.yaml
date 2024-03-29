@@ -8,3 +8,16 @@ services:
       POSTGRES_USER: myuser
     ports:
       - "5441:5432"
+  keycloak:
+    image: quay.io/keycloak/keycloak:23.0
+    container_name: my_keycloak
+    environment:
+      KC_HOSTNAME: localhost
+      KC_HOSTNAME_PORT: 8080
+      KC_HOSTNAME_STRICT_BACKCHANNEL: "true"
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    command: start-dev
+    ports:
+      - "8080:8080"
+
