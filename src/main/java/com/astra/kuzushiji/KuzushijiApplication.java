@@ -10,7 +10,9 @@ import org.springframework.web.client.RestTemplate;
 public class KuzushijiApplication {
 
 	public static void main(String[] args) {
+
 		SpringApplication.run(KuzushijiApplication.class, args);
+
 	}
 
 

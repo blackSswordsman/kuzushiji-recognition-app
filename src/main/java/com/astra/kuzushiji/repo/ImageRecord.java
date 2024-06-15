@@ -8,4 +8,5 @@ import java.time.LocalDateTime;
 public class ImageRecord {
     private final LocalDateTime createdAt;
     private final Long id;
+
 }
